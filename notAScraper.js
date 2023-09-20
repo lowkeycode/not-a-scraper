@@ -10,7 +10,6 @@ let products = {
   products: [],
 };
 
-let count = 0;
 
 async function getData() {
   const browser = await puppeteer.launch();
@@ -36,8 +35,7 @@ async function getData() {
         products.products = [...products.products, ...data.products];
       }
 
-      if (data.pagination.nextUrl && count < 3) {
-        count++;
+      if (data.pagination.nextUrl) {
         nextUrl = data.pagination.nextUrl;
         getData();
       } else {
