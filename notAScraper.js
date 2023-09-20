@@ -10,7 +10,6 @@ let products = {
   products: [],
 };
 
-
 async function getData() {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
@@ -19,7 +18,7 @@ async function getData() {
       console.log(`== NAVIGATION COMMITTED TO ${r.url()} ==`);
   });
 
-  urlToSearch = nextUrl ? `${INIT_URL}${nextUrl}` : INIT_URL
+  urlToSearch = nextUrl ? `${INIT_URL}${nextUrl}` : INIT_URL;
 
   page.on("requestfinished", async (req) => {
     try {
@@ -37,29 +36,26 @@ async function getData() {
 
       if (data.pagination.nextUrl) {
         nextUrl = data.pagination.nextUrl;
-        getData();
-      } else {
-        console.log(products)
+        console.log(products);
         fs.writeFile("./data.json", JSON.stringify(products), (err) => {
           if (err) {
             console.error(err);
           }
           console.log("== FILE WRITTEN ==");
         });
+        getData();
       }
     } catch (e) {
-      console.error(`- failed: ${e}`);
+      console.error(`- ERROR: - ${e}`);
     }
   });
 
   setTimeout(async () => {
     await page.goto(urlToSearch, {
       waitUntil: "networkidle0",
-      timeout: 60000,
     });
-  }, 3000);
+  }, 1000);
 }
-
 getData();
 
 // const url = "https://www.canadiantire.ca/en/promotions/hot-sale.html";
